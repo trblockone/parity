@@ -437,7 +437,7 @@ test-darwin:
     - git submodule update --init --recursive
   script:
     - export RUST_BACKTRACE=1
-    - ./test.sh $CARGOFLAGS --no-release
+    - ./test.sh $CARGOFLAGS
   tags:
     - osx
   allow_failure: true
@@ -493,7 +493,7 @@ test-rust-beta:
   script:
     - export RUST_BACKTRACE=1
     - echo $JS_FILES_MODIFIED
-    - ./test.sh $CARGOFLAGS --no-release
+    - if [ -z $JS_FILES_MODIFIED ]; then echo "skip js test"; else ./test.sh $CARGOFLAGS; fi
   tags:
     - rust
     - rust-beta
@@ -507,7 +507,8 @@ test-rust-nightly:
     - git submodule update --init --recursive
   script:
     - export RUST_BACKTRACE=1
-    - ./test.sh $CARGOFLAGS --no-release
+    - echo $JS_FILES_MODIFIED
+    - if [ -z $JS_FILES_MODIFIED ]; then echo "skip js test"; else ./test.sh $CARGOFLAGS; fi
   tags:
     - rust
     - rust-nightly

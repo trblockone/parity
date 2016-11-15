@@ -90,9 +90,3 @@ name = "parity"
 debug = false
 lto = false
 panic = "abort"
-
-[profile.test]
-panic = "abort"
-
-[profile.dev]
-panic = "abort"

@@ -263,7 +263,8 @@ impl BlockDownloader {
 			State::Blocks => {
 				let count = headers.len();
 				// At least one of the heades must advance the subchain. Otherwise they are all useless.
-				if !any_known {
+				if count == 0 || !any_known {
+					trace!(target: "sync", "No useful headers");
 					return Err(BlockDownloaderImportError::Useless);
 				}
 				self.blocks.insert_headers(headers);

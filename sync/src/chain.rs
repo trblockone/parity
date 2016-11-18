@@ -1113,7 +1113,7 @@ impl ChainSync {
 		let syncing_difficulty = chain_info.pending_total_difficulty;
 
 		let higher_difficulty = peer_difficulty.map_or(true, |pd| pd > syncing_difficulty);
-		if force || self.state == SyncState::NewBlocks || higher_difficulty || self.old_blocks.is_some() {
+		if force || higher_difficulty || self.old_blocks.is_some() {
 			match self.state {
 				SyncState::WaitingPeers => {
 					trace!(target: "sync", "Checking snapshot sync: {} vs {}", peer_snapshot_number, chain_info.best_block_number);

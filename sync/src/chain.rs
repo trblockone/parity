@@ -1129,7 +1129,7 @@ impl ChainSync {
 		let num_active_peers = self.peers.values().filter(|p| p.asking != PeerAsking::Nothing).count();
 
 		let higher_difficulty = peer_difficulty.map_or(true, |pd| pd > syncing_difficulty);
-		if force || higher_difficulty || self.old_blocks.is_some() {
+		if force || self.state == SyncState::NewBlocks || higher_difficulty || self.old_blocks.is_some() {
 			match self.state {
 				SyncState::WaitingPeers => {
 					trace!(target: "sync", "Checking snapshot sync: {} vs {}", peer_snapshot_number, chain_info.best_block_number);
@@ -1142,7 +1142,7 @@ impl ChainSync {
 					}
 
 					let have_latest = io.chain().block_status(BlockID::Hash(peer_latest)) != BlockStatus::Unknown;
-					if !have_latest && (higher_difficulty || force) {
+					if !have_latest && (higher_difficulty || force || self.state == SyncState::NewBlocks) {
 						// check if got new blocks to download
 						trace!(target: "sync", "Syncing with {}, force={}, td={:?}, our td={}", peer_id, force, peer_difficulty, syncing_difficulty);
 						if let Some(request) = self.new_blocks.request_blocks(io, num_active_peers) {
